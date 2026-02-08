@@ -57,11 +57,20 @@ https://git-scm.com/downloads
 
 ## How to Run the Project Locally
 
-1. Clone the repository
+You can run the project either by cloning the repository or by using the provided ZIP file.
+
+### Option 1: Clone the repository
+
 ```
 git clone https://github.com/pichiloor/todo-app.git 
 cd todo-app
 ```
+
+### Option 2: Use the ZIP file
+
+Extract the ZIP file and open a terminal inside the project root folder.
+
+
 2. Start the application
 
 Before starting the application, create a `.env` file inside the `frontend` folder
