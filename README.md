@@ -63,6 +63,7 @@ git clone https://github.com/pichiloor/todo-app.git
 cd todo-app
 ```
 2. Start the application
+
 Before starting the application, create a `.env` file inside the `frontend` folder
 using `example.env` as reference.
 
