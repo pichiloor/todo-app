@@ -36,7 +36,7 @@ todo-app/
 - Backend: Python, Django, Django REST Framework
 - Frontend: React, Vite
 - Database: PostgreSQL
-- Containerization: Docker and Docker Compose
+- Containerization: Docker
 
 ---
 
@@ -45,10 +45,13 @@ todo-app/
 To run this project locally, you only need:
 
 - Docker
-- Docker Compose
+- Git
 
 You can download Docker from:
 https://www.docker.com/products/docker-desktop/
+
+You can download Git from:
+https://git-scm.com/downloads
 
 ---
 
