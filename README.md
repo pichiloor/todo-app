@@ -77,14 +77,11 @@ No manual commands are required.
 
 Once the containers are running, you can access:
 
-- Frontend application:  
-  http://localhost:5173
+- Frontend application: http://localhost:5173
 
-- Backend API:  
-  http://localhost:8000
+- Backend API: http://localhost:8000
 
-- Django Admin panel:  
-  http://localhost:8000/admin
+- Django Admin panel: http://localhost:8000/admin
 
 ---
 
@@ -111,7 +108,9 @@ Backend tests are written using Django and Django REST Framework.
 
 To run the tests:
 
+```
 docker compose exec backend python manage.py test
+```
 
 The tests cover:
 - creating tasks
