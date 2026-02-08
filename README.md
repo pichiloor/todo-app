@@ -59,16 +59,19 @@ https://git-scm.com/downloads
 
 You can run the project either by cloning the repository or by using the provided ZIP file.
 
-### Option 1: Clone the repository
+1. Get the project ready.
+
+### Option A: Clone the repository
 
 ```
 git clone https://github.com/pichiloor/todo-app.git 
 cd todo-app
 ```
 
-### Option 2: Use the ZIP file
+### Option B: Use the ZIP file
 
-Extract the ZIP file and open a terminal inside the project root folder.
+Extract the file `FullStack-Test_AndresLoor.zip` and open a terminal inside the extracted
+project root folder.
 
 
 2. Start the application
