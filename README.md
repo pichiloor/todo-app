@@ -52,10 +52,10 @@ To run this project locally, you only need:
 ## How to Run the Project Locally
 
 1. Clone the repository
-
+```
 git clone https://github.com/pichiloor/todo-app.git 
 cd todo-app
-
+```
 2. Start the application
 
 docker compose up
