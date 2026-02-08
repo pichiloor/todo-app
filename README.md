@@ -57,8 +57,9 @@ git clone https://github.com/pichiloor/todo-app.git
 cd todo-app
 ```
 2. Start the application
-
+```
 docker compose up
+```
 
 Docker will automatically start:
 - the PostgreSQL database
@@ -90,7 +91,9 @@ To use the Django admin panel, you must create a superuser.
 
 Open a new terminal and run:
 
+```
 docker compose exec backend python manage.py createsuperuser
+```
 
 Follow the prompts to create a username and password.
 Then log in at:
