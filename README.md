@@ -47,6 +47,9 @@ To run this project locally, you only need:
 - Docker
 - Docker Compose
 
+You can download Docker from:
+https://www.docker.com/products/docker-desktop/
+
 ---
 
 ## How to Run the Project Locally
