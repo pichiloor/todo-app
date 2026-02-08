@@ -53,7 +53,7 @@ To run this project locally, you only need:
 
 1. Clone the repository
 
-git clone <repository-url>  
+git clone https://github.com/pichiloor/todo-app.git 
 cd todo-app
 
 2. Start the application
