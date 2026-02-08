@@ -10,6 +10,7 @@ The application allows users to create, update, delete, and complete tasks.
 
 ## Project Structure
 
+```
 todo-app/
 ├── docker-compose.yml
 ├── README.md
@@ -28,8 +29,7 @@ todo-app/
     ├── vite.config.js
     ├── index.html
     └── src/
-
----
+```
 
 ## Tech Stack
 
