@@ -5,7 +5,7 @@ const PASSWORD = import.meta.env.VITE_API_PASSWORD;
 let accessToken = null;
 
 export async function getAccessToken() {
-  // Si ya tenemos token, reutilizamos
+  // If tokem exists, we use it
   if (accessToken) {
     return accessToken;
   }

@@ -17,19 +17,23 @@ import { IconPencil, IconCheck, IconX, IconTrash } from '@tabler/icons-react'
 import api from './services/api'
 
 function App() {
+  // List of tasks fetched from the backend
   const [tasks, setTasks] = useState([])
+
+  // Loading state while fetching data
   const [loading, setLoading] = useState(true)
 
-  // Create form
+  // State for creating a new task
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [completed, setCompleted] = useState(false)
 
-  // Edit state
+  // State for editing an existing task
   const [editingId, setEditingId] = useState(null)
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
 
+  // Fetch all tasks from the API
   const fetchTasks = () => {
     setLoading(true)
     api.get('tasks/')
@@ -43,12 +47,15 @@ function App() {
       })
   }
 
+  // Load tasks when the component mounts
   useEffect(() => {
     fetchTasks()
   }, [])
 
+  // Create a new task
   const createTask = () => {
     if (!title.trim()) return
+
     api.post('tasks/', { title, description, completed })
       .then(() => {
         setTitle('')
@@ -59,6 +66,7 @@ function App() {
       .catch(err => console.error(err))
   }
 
+  // Toggle completed state of a task
   const toggleCompleted = (task) => {
     api.patch(`tasks/${task.id}/`, { completed: !task.completed })
       .then(() => {
@@ -71,6 +79,7 @@ function App() {
       .catch(err => console.error(err))
   }
 
+  // Delete a task
   const deleteTask = (taskId) => {
     api.delete(`tasks/${taskId}/`)
       .then(() => {
@@ -79,21 +88,21 @@ function App() {
       .catch(err => console.error(err))
   }
 
-  // Enter edit mode
+  // Enable edit mode for a task
   const startEdit = (task) => {
     setEditingId(task.id)
     setEditTitle(task.title ?? '')
     setEditDescription(task.description ?? '')
   }
 
-  // Cancel edit
+  // Cancel edit mode
   const cancelEdit = () => {
     setEditingId(null)
     setEditTitle('')
     setEditDescription('')
   }
 
-  // Save edit (PATCH)
+  // Save edited task
   const saveEdit = (taskId) => {
     if (!editTitle.trim()) return
 
@@ -118,7 +127,7 @@ function App() {
     <Container size="sm" mt="xl">
       <Title order={2} mb="md">Todo App</Title>
 
-      {/* CREATE FORM */}
+      {/* Form to create a new task */}
       <Stack mb="lg">
         <TextInput
           label="Title"
@@ -144,9 +153,10 @@ function App() {
         <Button onClick={createTask}>Add Task</Button>
       </Stack>
 
+      {/* Show loader while fetching tasks */}
       {loading && <Loader />}
 
-      {/* LIST */}
+      {/* Task list */}
       <Stack>
         {tasks.map(task => {
           const isEditing = editingId === task.id
@@ -167,15 +177,16 @@ function App() {
                         <Text fw={500} td={task.completed ? 'line-through' : 'none'}>
                           {task.title}
                         </Text>
+
                         {task.description && (
                           <Text size="sm" c="dimmed">
                             {task.description}
                           </Text>
                         )}
+
                         <Text size="xs" c="gray">
                           Created: {new Date(task.created_at).toLocaleString()}
                         </Text>
-
                       </>
                     ) : (
                       <Stack gap="xs">
@@ -184,6 +195,7 @@ function App() {
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
                         />
+
                         <Textarea
                           label="Description"
                           value={editDescription}
@@ -195,7 +207,7 @@ function App() {
                   </div>
                 </Group>
 
-                {/* ACTIONS */}
+                {/* Action buttons */}
                 <Group gap="xs">
                   {!isEditing ? (
                     <>
