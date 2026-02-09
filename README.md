@@ -140,6 +140,92 @@ The tests cover:
 
 ---
 
+## API Authentication and Testing (JWT)
+
+All backend API endpoints are protected using JWT authentication
+(`djangorestframework-simplejwt`).
+
+Because of this, API endpoints cannot be accessed directly from the browser
+without authentication and will return `401 Unauthorized`.
+
+To test the API manually, you must first obtain a JWT token and then include it
+in the request headers.
+
+The recommended way to test the API is by using Postman.
+
+To obtain a JWT token, create a POST request in Postman with the following
+configuration:
+
+URL:
+http://localhost:8000/api/auth/token/
+
+Method:
+POST
+
+Body:
+Select `raw` and `JSON` as the body type and send the following payload:
+
+{
+  "username": "<your_username>",
+  "password": "<your_password>"
+}
+
+You can use a Django superuser or any existing user.
+
+If the credentials are valid, the API will respond with a JSON object containing
+a refresh token and an access token. Copy the value of the `access` token, as it
+will be required to authenticate all subsequent API requests.
+
+For every protected API request, the access token must be sent in the
+Authorization header using the Bearer scheme:
+
+Authorization: Bearer Token <ACCESS_TOKEN>
+
+In Postman, this can be done by opening a new request, going to the
+Authorization tab, selecting `Bearer Token` as the type, and pasting the access
+token in the Token field.
+
+Once authenticated, the following API endpoints can be tested:
+
+List tasks:
+GET http://localhost:8000/api/tasks/
+
+Create a task:
+POST http://localhost:8000/api/tasks/
+
+Example request body:
+{
+  "title": "Task created from Postman",
+  "description": "Testing JWT authentication",
+  "completed": false
+}
+
+Update a task:
+PATCH http://localhost:8000/api/tasks/<task_id>/
+
+Example request body:
+{
+  "completed": true
+}
+
+Delete a task:
+DELETE http://localhost:8000/api/tasks/<task_id>/
+
+Alternatively, the API can be tested using the command line with curl.
+
+To obtain a token using curl:
+curl -X POST http://localhost:8000/api/auth/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"<username>","password":"<password>"}'
+
+To access a protected endpoint using curl:
+curl http://localhost:8000/api/tasks/ \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
+
+All API endpoints require JWT authentication, tokens must always be sent in the
+Authorization header, and tokens are never sent in the request body. This
+authentication flow is intentional and demonstrates proper backend API security.
+
 
 ## Author
 
