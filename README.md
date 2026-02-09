@@ -18,17 +18,36 @@ todo-app/
 │   ├── manage.py
 │   ├── requirements.txt
 │   ├── config/
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
 │   └── tasks/
-│       ├── models.py
-│       ├── views.py
-│       ├── serializers.py
+│       ├── __init__.py
 │       ├── admin.py
-│       └── tests.py│   
+│       ├── models.py
+│       ├── serializers.py
+│       ├── views.py
+│       └── tests.py
 └── frontend/
-    ├── package.json
-    ├── vite.config.js
     ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── vite.config.js
+    ├── example.env
+    ├── .env
+    ├── .gitignore
+    ├── node_modules/
     └── src/
+        ├── assets/
+        ├── services/
+        │   ├── api.js
+        │   └── auth.js
+        ├── App.jsx
+        ├── App.css
+        ├── main.jsx
+        └── index.css
 ```
 
 ## Tech Stack
