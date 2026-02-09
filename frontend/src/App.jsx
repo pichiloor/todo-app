@@ -14,7 +14,7 @@ import {
   Textarea
 } from '@mantine/core'
 import { IconPencil, IconCheck, IconX, IconTrash } from '@tabler/icons-react'
-import api from './api'
+import api from './services/api'
 
 function App() {
   const [tasks, setTasks] = useState([])
@@ -79,21 +79,21 @@ function App() {
       .catch(err => console.error(err))
   }
 
-  // ✏️ Enter edit mode
+  // Enter edit mode
   const startEdit = (task) => {
     setEditingId(task.id)
     setEditTitle(task.title ?? '')
     setEditDescription(task.description ?? '')
   }
 
-  // ❌ Cancel edit
+  // Cancel edit
   const cancelEdit = () => {
     setEditingId(null)
     setEditTitle('')
     setEditDescription('')
   }
 
-  // ✅ Save edit (PATCH)
+  // Save edit (PATCH)
   const saveEdit = (taskId) => {
     if (!editTitle.trim()) return
 

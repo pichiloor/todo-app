@@ -22,6 +22,7 @@ services:
     command: >
       sh -c "
       pip install -r requirements.txt &&
+      python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000
       "
 
@@ -32,6 +33,10 @@ services:
       - ./frontend:/app
     ports:
       - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
     command: >
       sh -c "
       npm install &&
