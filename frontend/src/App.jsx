@@ -13,6 +13,7 @@ import {
   ActionIcon,
   Textarea
 } from '@mantine/core'
+import {DatePickerInput} from '@mantine/dates'
 import { IconPencil, IconCheck, IconX, IconTrash } from '@tabler/icons-react'
 import api from './services/api'
 
@@ -27,11 +28,13 @@ function App() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [completed, setCompleted] = useState(false)
+  const [dueDate, setDueDate] = useState(null)  // ← Cambiar undefined a null
 
   // State for editing an existing task
   const [editingId, setEditingId] = useState(null)
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
+  const [editDueDate, setEditDueDate] = useState(null)
 
   // Fetch all tasks from the API
   const fetchTasks = () => {
@@ -56,11 +59,17 @@ function App() {
   const createTask = () => {
     if (!title.trim()) return
 
-    api.post('tasks/', { title, description, completed })
+    api.post('tasks/', { 
+      title, 
+      description, 
+      completed, 
+      due_date: dueDate  // Ya es un string, no necesita conversión
+    })
       .then(() => {
         setTitle('')
         setDescription('')
         setCompleted(false)
+        setDueDate(null)
         fetchTasks()
       })
       .catch(err => console.error(err))
@@ -93,13 +102,14 @@ function App() {
     setEditingId(task.id)
     setEditTitle(task.title ?? '')
     setEditDescription(task.description ?? '')
+    setEditDueDate(task.due_date)  // Ya es string, no necesita conversión
   }
-
   // Cancel edit mode
   const cancelEdit = () => {
     setEditingId(null)
     setEditTitle('')
     setEditDescription('')
+    setEditDueDate(null)
   }
 
   // Save edited task
@@ -108,13 +118,14 @@ function App() {
 
     api.patch(`tasks/${taskId}/`, {
       title: editTitle,
-      description: editDescription
+      description: editDescription,
+      due_date: editDueDate
     })
       .then(() => {
         setTasks(tasks =>
           tasks.map(t =>
             t.id === taskId
-              ? { ...t, title: editTitle, description: editDescription }
+              ? { ...t, title: editTitle, description: editDescription, due_date: editDueDate }
               : t
           )
         )
@@ -142,6 +153,14 @@ function App() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           minRows={2}
+        />
+
+        <DatePickerInput          
+          label="Due Date (optional)"
+          placeholder="Pick a due date..."
+          value={dueDate}
+          onChange={setDueDate}  // ← En lugar de (date) => setDueDate(date)
+          clearable
         />
 
         <Checkbox
@@ -184,6 +203,12 @@ function App() {
                           </Text>
                         )}
 
+                        {task.due_date && (
+                          <Text size="sm" c="orange" fw={500}>
+                            Due: {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
+                          </Text>
+                        )}
+
                         <Text size="xs" c="gray">
                           Created: {new Date(task.created_at).toLocaleString()}
                         </Text>
@@ -201,6 +226,13 @@ function App() {
                           value={editDescription}
                           onChange={(e) => setEditDescription(e.target.value)}
                           minRows={2}
+                        />
+                        <DatePickerInput
+                          label="Due Date"
+                          placeholder="Pick a due date..."
+                          value={editDueDate}
+                          onChange={setEditDueDate}
+                          clearable
                         />
                       </Stack>
                     )}
