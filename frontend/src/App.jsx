@@ -18,25 +18,25 @@ import { IconPencil, IconCheck, IconX, IconTrash } from '@tabler/icons-react'
 import api from './services/api'
 
 function App() {
-  // List of tasks fetched from the backend
+  // Task list from backend
   const [tasks, setTasks] = useState([])
 
-  // Loading state while fetching data
+  // Loading indicator
   const [loading, setLoading] = useState(true)
 
-  // State for creating a new task
+  // Fields for new task
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [completed, setCompleted] = useState(false)
-  const [dueDate, setDueDate] = useState(null)  // ← Cambiar undefined a null
+  const [dueDate, setDueDate] = useState(null)
 
-  // State for editing an existing task
+  // Fields for editing task
   const [editingId, setEditingId] = useState(null)
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
   const [editDueDate, setEditDueDate] = useState(null)
 
-  // Fetch all tasks from the API
+  // Get all tasks from backend
   const fetchTasks = () => {
     setLoading(true)
     api.get('tasks/')
@@ -50,35 +50,39 @@ function App() {
       })
   }
 
-  // Load tasks when the component mounts
+  // Load tasks on start
   useEffect(() => {
     fetchTasks()
   }, [])
 
-  // Create a new task
+  // Create new task
   const createTask = () => {
+    // Don't allow empty title
     if (!title.trim()) return
 
-    api.post('tasks/', { 
-      title, 
-      description, 
-      completed, 
-      due_date: dueDate  // Ya es un string, no necesita conversión
+    api.post('tasks/', {
+      title,
+      description,
+      completed,
+      due_date: dueDate
     })
       .then(() => {
+        // Clear form
         setTitle('')
         setDescription('')
         setCompleted(false)
         setDueDate(null)
+        // Refresh list
         fetchTasks()
       })
       .catch(err => console.error(err))
   }
 
-  // Toggle completed state of a task
+  // Toggle task completed status
   const toggleCompleted = (task) => {
     api.patch(`tasks/${task.id}/`, { completed: !task.completed })
       .then(() => {
+        // Update local state
         setTasks(tasks =>
           tasks.map(t =>
             t.id === task.id ? { ...t, completed: !t.completed } : t
@@ -88,23 +92,25 @@ function App() {
       .catch(err => console.error(err))
   }
 
-  // Delete a task
+  // Delete task
   const deleteTask = (taskId) => {
     api.delete(`tasks/${taskId}/`)
       .then(() => {
+        // Remove from list
         setTasks(tasks => tasks.filter(t => t.id !== taskId))
       })
       .catch(err => console.error(err))
   }
 
-  // Enable edit mode for a task
+  // Start edit mode
   const startEdit = (task) => {
     setEditingId(task.id)
     setEditTitle(task.title ?? '')
     setEditDescription(task.description ?? '')
-    setEditDueDate(task.due_date)  // Ya es string, no necesita conversión
+    setEditDueDate(task.due_date)
   }
-  // Cancel edit mode
+
+  // Cancel edit
   const cancelEdit = () => {
     setEditingId(null)
     setEditTitle('')
@@ -112,8 +118,9 @@ function App() {
     setEditDueDate(null)
   }
 
-  // Save edited task
+  // Save changes
   const saveEdit = (taskId) => {
+    // Don't allow empty title
     if (!editTitle.trim()) return
 
     api.patch(`tasks/${taskId}/`, {
@@ -122,6 +129,7 @@ function App() {
       due_date: editDueDate
     })
       .then(() => {
+        // Update in list
         setTasks(tasks =>
           tasks.map(t =>
             t.id === taskId
@@ -138,7 +146,7 @@ function App() {
     <Container size="sm" mt="xl">
       <Title order={2} mb="md">Todo App</Title>
 
-      {/* Form to create a new task */}
+      {/* Form to create new task */}
       <Stack mb="lg">
         <TextInput
           label="Title"
@@ -155,11 +163,11 @@ function App() {
           minRows={2}
         />
 
-        <DatePickerInput          
+        <DatePickerInput
           label="Due Date (optional)"
           placeholder="Pick a due date..."
           value={dueDate}
-          onChange={setDueDate}  // ← En lugar de (date) => setDueDate(date)
+          onChange={setDueDate}
           clearable
         />
 
@@ -172,7 +180,7 @@ function App() {
         <Button onClick={createTask}>Add Task</Button>
       </Stack>
 
-      {/* Show loader while fetching tasks */}
+      {/* Show loader while loading */}
       {loading && <Loader />}
 
       {/* Task list */}
@@ -184,6 +192,7 @@ function App() {
             <Paper key={task.id} p="md" withBorder>
               <Group align="flex-start" justify="space-between">
                 <Group align="flex-start" style={{ flex: 1 }}>
+                  {/* Checkbox to mark complete/incomplete */}
                   <Checkbox
                     checked={task.completed}
                     onChange={() => toggleCompleted(task)}
@@ -191,6 +200,7 @@ function App() {
                   />
 
                   <div style={{ flex: 1 }}>
+                    {/* View mode */}
                     {!isEditing ? (
                       <>
                         <Text fw={500} td={task.completed ? 'line-through' : 'none'}>
@@ -203,6 +213,7 @@ function App() {
                           </Text>
                         )}
 
+                        {/* Show due date if exists */}
                         {task.due_date && (
                           <Text size="sm" c="orange" fw={500}>
                             Due: {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
@@ -214,6 +225,7 @@ function App() {
                         </Text>
                       </>
                     ) : (
+                      /* Edit mode */
                       <Stack gap="xs">
                         <TextInput
                           label="Title"
@@ -243,6 +255,7 @@ function App() {
                 <Group gap="xs">
                   {!isEditing ? (
                     <>
+                      {/* Edit button */}
                       <ActionIcon
                         variant="light"
                         aria-label="Edit"
@@ -251,6 +264,7 @@ function App() {
                         <IconPencil size={18} />
                       </ActionIcon>
 
+                      {/* Delete button */}
                       <ActionIcon
                         color="red"
                         variant="light"
@@ -262,6 +276,7 @@ function App() {
                     </>
                   ) : (
                     <>
+                      {/* Save button */}
                       <ActionIcon
                         color="green"
                         variant="light"
@@ -271,6 +286,7 @@ function App() {
                         <IconCheck size={18} />
                       </ActionIcon>
 
+                      {/* Cancel button */}
                       <ActionIcon
                         color="gray"
                         variant="light"
