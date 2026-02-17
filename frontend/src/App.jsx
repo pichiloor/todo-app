@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import {
   Container,
   Title,
@@ -16,6 +16,7 @@ import {
 import {DatePickerInput} from '@mantine/dates'
 import { IconPencil, IconCheck, IconX, IconTrash } from '@tabler/icons-react'
 import api from './services/api'
+import { notifications } from '@mantine/notifications'
 
 function App() {
   // Task list from backend
@@ -29,6 +30,9 @@ function App() {
   const [description, setDescription] = useState('')
   const [completed, setCompleted] = useState(false)
   const [dueDate, setDueDate] = useState(null)
+
+  // Ref to focus title input on validation error
+  const titleRef = useRef(null)
 
   // Fields for editing task
   const [editingId, setEditingId] = useState(null)
@@ -45,9 +49,10 @@ function App() {
         setLoading(false)
       })
       .catch(err => {
-        console.error(err)
+        notifications.show({ color: 'red', title: 'Error', message: 'Could not load tasks' })
         setLoading(false)
       })
+
   }
 
   // Load tasks on start
@@ -58,7 +63,12 @@ function App() {
   // Create new task
   const createTask = () => {
     // Don't allow empty title
-    if (!title.trim()) return
+    if (!title.trim()) {
+      notifications.show({ color: 'orange', title: 'Missing field', message: 'Title is required' })
+      titleRef.current?.focus()
+      return
+    }
+
 
     api.post('tasks/', {
       title,
@@ -75,7 +85,8 @@ function App() {
         // Refresh list
         fetchTasks()
       })
-      .catch(err => console.error(err))
+      .catch(() => notifications.show({ color: 'red', title: 'Error', message: 'Could not create task' }))
+
   }
 
   // Toggle task completed status
@@ -89,7 +100,8 @@ function App() {
           )
         )
       })
-      .catch(err => console.error(err))
+      .catch(() => notifications.show({ color: 'red', title: 'Error', message: 'Could not update task' }))
+
   }
 
   // Delete task
@@ -99,7 +111,8 @@ function App() {
         // Remove from list
         setTasks(tasks => tasks.filter(t => t.id !== taskId))
       })
-      .catch(err => console.error(err))
+      .catch(() => notifications.show({ color: 'red', title: 'Error', message: 'Could not delete task' }))
+
   }
 
   // Start edit mode
@@ -139,7 +152,8 @@ function App() {
         )
         cancelEdit()
       })
-      .catch(err => console.error(err))
+      .catch(() => notifications.show({ color: 'red', title: 'Error', message: 'Could not save changes' }))
+
   }
 
   return (
@@ -153,6 +167,8 @@ function App() {
           placeholder="New task..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          ref={titleRef}
+          withAsterisk
         />
 
         <Textarea

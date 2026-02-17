@@ -29,16 +29,22 @@ You only need one command to start everything.
 No manual installation, no complicated setup.  
 This makes it very easy to run on any computer.
 
-## Tests  
-I wrote some **automatic tests** in the backend using Django’s testing tools.
+## Tests
+I wrote **automatic tests** in the backend using Django's testing tools.
 
-The tests check two important things:
+The tests cover:
 
-- Trying to use the API **without** token → should give error 401
-- Using the API **with** a correct JWT token → CRUD should work normally
+- Trying to use the API **without** a token → should return 401
+- Creating tasks with and without due date
+- Creating a task with only the required fields
+- Creating a task without any data → should return 400
+- Listing tasks
+- Updating a task (title, completed status, due date)
+- Deleting a task
+- Trying to update or delete a task that doesn't exist → should return 404
 
-In the tests I create a test user and a token directly.  
-This is a very common way to write tests because it is faster and you don’t depend on the login flow.
+In the tests I create a test user and a JWT token directly.
+This is a very common approach because it's faster and doesn't depend on the login flow.
 
 ## Other ways I could have done it
 

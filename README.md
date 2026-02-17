@@ -93,10 +93,36 @@ Extract the file `FullStack-Test_AndresLoor.zip` and open a terminal inside the 
 project root folder.
 
 
-2. Set up the environment file
+2. Set up the environment files
 
-Before starting the application, create a `.env` file inside the `frontend` folder
-by copying `example.env`:
+Before starting the application, you need to create two `.env` files.
+
+**Backend:**
+
+```
+cp backend/example.env backend/.env
+```
+
+Then open `backend/.env` and fill in your values:
+
+```
+SECRET_KEY=your-secret-key-here
+DB_NAME=todo_db
+DB_USER=todo_user
+DB_PASSWORD=12345678
+DB_HOST=db
+DB_PORT=5432
+```
+
+- `SECRET_KEY` — a long random string used by Django for security. You can generate one with:
+
+```
+python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
+
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD` — must match the values in `docker-compose.yml` under the `db` service
+
+**Frontend:**
 
 ```
 cp frontend/example.env frontend/.env
@@ -121,7 +147,7 @@ docker compose exec backend python manage.py createsuperuser
 ```
 
 Follow the prompts to set a username and password, then put those same credentials
-in your `.env` file.
+in your `frontend/.env` file.
 
 3. Start the application
 
@@ -190,11 +216,14 @@ docker compose exec backend python manage.py test
 ```
 
 The tests cover:
-- creating tasks
+- authentication (rejecting requests without a valid token)
+- creating tasks with and without due date
+- creating a task with only the required fields
+- creating a task without required fields (expects 400)
 - listing tasks
-- updating tasks
-- deleting tasks
-- handling error cases (invalid data and non-existing tasks)
+- updating a task (title, completed status, due date)
+- deleting a task
+- handling errors for non-existing tasks (expects 404)
 
 ---
 
@@ -283,6 +312,9 @@ curl http://localhost:8000/api/tasks/ \
 All API endpoints require JWT authentication, tokens must always be sent in the
 Authorization header, and tokens are never sent in the request body. This
 authentication flow is intentional and demonstrates proper backend API security.
+
+**Note:** The access token expires after 30 minutes. If the frontend stops working after
+a long period of inactivity, simply reload the page — it will request a new token automatically.
 
 
 ## Author
