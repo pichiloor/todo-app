@@ -167,6 +167,18 @@ http://localhost:8000/admin
 
 ---
 
+## Loading Sample Data
+
+To load sample tasks into the database, run:
+
+```
+docker compose exec backend python manage.py loaddata sample_tasks
+```
+
+This will insert 5 example tasks with different statuses and due dates.
+
+---
+
 ## Running Backend Tests
 
 Backend tests are written using Django and Django REST Framework.
