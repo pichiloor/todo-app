@@ -93,10 +93,37 @@ Extract the file `FullStack-Test_AndresLoor.zip` and open a terminal inside the 
 project root folder.
 
 
-2. Start the application
+2. Set up the environment file
 
 Before starting the application, create a `.env` file inside the `frontend` folder
-using `example.env` as reference.
+by copying `example.env`:
+
+```
+cp frontend/example.env frontend/.env
+```
+
+Then open `frontend/.env` and fill in your values:
+
+```
+VITE_API_URL=http://localhost:8000
+VITE_API_USER=your_username
+VITE_API_PASSWORD=your_password
+```
+
+- `VITE_API_URL` — the backend URL (leave as-is for local development)
+- `VITE_API_USER` — the Django user the frontend will use to authenticate
+- `VITE_API_PASSWORD` — the password for that user
+
+To create a Django user, start the containers first and then run:
+
+```
+docker compose exec backend python manage.py createsuperuser
+```
+
+Follow the prompts to set a username and password, then put those same credentials
+in your `.env` file.
+
+3. Start the application
 
 ```
 docker compose up
