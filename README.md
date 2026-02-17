@@ -95,7 +95,29 @@ project root folder.
 
 2. Set up the environment files
 
-Before starting the application, you need to create two `.env` files.
+Before starting the application, you need to create three `.env` files.
+
+Each file serves a different purpose:
+- Root `.env` — read by Docker Compose to configure the database container
+- `backend/.env` — read by Django to connect to the database and set the secret key
+- `frontend/.env` — read by Vite to configure the API URL and login credentials
+
+**Root (project folder):**
+
+```
+cp example.env .env
+```
+
+The default values in `example.env` work out of the box. You can use them as-is or change them to your preference:
+
+```
+DB_NAME=todo_db
+DB_USER=todo_user
+DB_PASSWORD=12345678
+```
+
+These are not existing credentials — Docker will create this PostgreSQL user with these values
+the first time the database container starts. The same values must be set in `backend/.env`.
 
 **Backend:**
 
@@ -120,7 +142,7 @@ DB_PORT=5432
 python -c "import secrets; print(secrets.token_urlsafe(50))"
 ```
 
-- `DB_NAME`, `DB_USER`, `DB_PASSWORD` — must match the values in `docker-compose.yml` under the `db` service
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD` — must be identical to the values in the root `.env`
 
 **Frontend:**
 
